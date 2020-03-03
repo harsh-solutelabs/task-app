@@ -1,1 +1,12 @@
-fuser -k -n tcp 3000
+fuser -k -n tcp 3535
+
+
+git config --global color.ui true
+git config --global user.name "YOUR NAME"
+git config --global user.email "YOUR@EMAIL.com"
+ssh-keygen -t rsa -b 4096 -C "YOUR@EMAIL.com
+
+ssh -T git@github.com
+
+
+sudo mongod  --port 27017 --dbpath /var/lib/mongodb
