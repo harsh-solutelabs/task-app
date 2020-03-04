@@ -1,6 +1,7 @@
 const express = require("express");
 const router = new express.Router();
 const User = require("../models/user");
+const auth=require("../middlerware/auth")
 //To Add Users---------------------------------
 router.post("/users", async (req, res) => {
   const user = new User(req.body);
@@ -27,13 +28,17 @@ router.get("/user/:id", async (req, res) => {
     res.status(505).send();
   }
 });
+//To Find own profile----------------------------
+router.get("/users/me",auth,async (req,res)=>{
+  res.send(req.user)
+})
 //To Find All users------------------------------
-router.get("/users", async (req, res) => {
+router.get("/users",auth, async (req, res) => {
   try {
     const users = await User.find({});
     res.send(users);
   } catch (error) {
-    res.status(500);
+    res.status(500).send();
   }
 });
 //Updating users----------------------------------------
