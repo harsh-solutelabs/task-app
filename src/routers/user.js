@@ -93,4 +93,28 @@ router.post("/users/login", async (req, res) => {
     res.status(400).send();
   }
 });
+//user Logout
+router.post('/user/logout',auth,async(req,res)=>{
+  try {
+    req.user.tokens=req.user.tokens.filter((token)=>{
+      return token.token !== req.token
+    })  
+    await req.user.save()
+    res.send({"message":"loggedout"})
+  } catch (e) {
+    res.status(500).send()
+  }
+})
+//user Logout All
+router.post('/user/logoutall',auth,async(req,res)=>{
+  try {
+    req.user.tokens =[]
+    await req.user.save()
+    res.send({"message":"loggedoutall"})
+  } catch (e) {
+    res.status(500).send()
+  }
+})
+
+
 module.exports = router;
