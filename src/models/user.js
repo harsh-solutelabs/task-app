@@ -4,7 +4,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken")
 const userSchema = new mongoose.Schema({
   name: {
-    type: String
+    type: String,
+    required: true,
+    trim: true
   },
 
   email: {
@@ -38,6 +40,15 @@ const userSchema = new mongoose.Schema({
   }]
 });
 
+
+userSchema.methods.toJSON= function(){
+  const user = this
+  const userObject = user.toObject()
+
+  delete userObject.password;
+  delete userObject.tokens
+  return userObject
+}
 
 userSchema.methods.generateAuthToken = async function(){
   const user = this

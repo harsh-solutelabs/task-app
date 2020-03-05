@@ -42,7 +42,7 @@ router.get("/users",auth, async (req, res) => {
   }
 });
 //Updating users----------------------------------------
-router.patch("/user/:id", async (req, res) => {
+router.patch("/user/me",auth, async (req, res) => {
   // const _id = req.param.id;
   const allowedUpdates = ["name", "email", "password", "age"];
   const updates = Object.keys(req.body);
@@ -54,29 +54,23 @@ router.patch("/user/:id", async (req, res) => {
     return res.status(400).send({ erro: "invalid error" });
   }
   try {
-    const user = await User.findById(req.params.id);
     updates.forEach(update => {
-      return (user[update] = req.body[update]);
+      return (req.user[update] = req.body[update]);
     });
-    await user.save();
-    if (!user) {
-      return res.status(404).send();
-    }
-    res.send(user);
+    await req.user.save();
+  
+    res.send(req.user);
   } catch (e) {
     res.status(400).send(e);
   }
 });
 //Delete Users-----------------------------------
-router.delete("/user/:id", async (req, res) => {
+router.delete("/user/me", auth,async (req, res) => {
   try {
-    const user = await User.findByIdAndRemove(req.params.id);
-    if (!user) {
-      return res.status(400).send({ error: "user not found" });
-    }
-    res.status(200).send(user);
+      await req.user.remove()
+      res.send(req.user);
   } catch (error) {
-    res.status(400).send(error);
+    res.status(500).send(error);
   }
 });
 //user Login
@@ -88,9 +82,9 @@ router.post("/users/login", async (req, res) => {
     );
     const token = await user.generateAuthToken()
     // console.log(user);
-    res.send({user,token});
+    res.status(200).send({user,token});
   } catch (e) {
-    res.status(400).send();
+    res.status(400).send({error:'User Not Exist'});
   }
 });
 //user Logout
