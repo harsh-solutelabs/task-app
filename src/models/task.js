@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+// const User= require("../models/user")
 
 const Task = mongoose.model("Task", {
   describition: {
@@ -10,6 +11,11 @@ const Task = mongoose.model("Task", {
     type: Boolean,
     optional: true,
     default: false
+  },
+  owner:{
+    type:mongoose.Schema.Types.ObjectId,
+    required:true,
+    ref:'User'
   }
 });
 
